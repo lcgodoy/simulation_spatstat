@@ -4,7 +4,7 @@ sinput <- as.integer(sinput[1])
 box_sim <- matrix(rep(c(0, 1), 2),
                   ncol = 2, byrow = T)
 
-source("scripts/utils.R")
+source("scripts/utils_parallel.R")
 
 ##--- indep
 
