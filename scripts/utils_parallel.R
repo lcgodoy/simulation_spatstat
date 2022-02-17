@@ -22,7 +22,8 @@ compute_pvals <- function(sp_lst, bb, sid, scen, verbose = TRUE) {
                         format = "GTiff")
     raster::writeRaster(x = rst_sim[[2]], filename = tmp_files[2],
                         format = "GTiff")
-    
+
+    ## nbt makes sure that only one core are being used by GcoPS
     sh_cmd <- sprintf("/opt/GcoPS/bin/GcoPS -i1 %s -i2 %s -nbt 1",
                       tmp_files[1], tmp_files[2])
 
