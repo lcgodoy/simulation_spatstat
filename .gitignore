@@ -38,3 +38,7 @@ vignettes/*.pdf
 
 ## singularity images
 *.sif
+
+## emacs temporary / backup files
+*.#$
+*.~$
