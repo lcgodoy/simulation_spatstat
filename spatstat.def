@@ -7,9 +7,9 @@ Include: bash
     running the simulations for a paper submited to "spatial statistics".
 
 %files
-    pkg/tpsa_1.0.0.tar.gz /opt/
-    pkg/tpsautils_0.0.0.99.tar.gz /opt/
-    pkg/biom13115-sup-0001-gcops_codec.zip /opt/
+    src/tpsa_1.0.0.tar.gz /opt/
+    src/tpsautils_0.0.0.99.tar.gz /opt/
+    src/biom13115-sup-0001-gcops_codec.zip /opt/
 
 %post -c /bin/bash
 
@@ -94,7 +94,7 @@ Include: bash
     mkdir /opt/gdal-${GDAL_VERSION}/src
     mkdir /opt/gdal-${GDAL_VERSION}/build
 
-    ## cloning the src associated with GEOS
+    # ## cloning the src associated with GEOS
     wget -P /opt/geos-${GEOS_VERSION}/src \
         http://download.osgeo.org/geos/geos-${GEOS_VERSION}.tar.bz2
 
@@ -195,16 +195,16 @@ Include: bash
     ## installing packages
     export R_REP=https://cloud.r-project.org/
 
-    # PKGS=(Rcpp RcppArmadillo magrittr stringr sp rgeos \ 
-    #       rgdal spatstat splancs purrr sf raster stars)
+    PKGS=(Rcpp RcppArmadillo magrittr stringr sp rgeos \ 
+          rgdal spatstat splancs purrr sf raster stars)
 
-    # for pkg in ${PKGS[@]}; do
-    #   Rscript -e \
-    #       "install.packages('${pkg}', repos = '${R_REP}')" # || echo "${pkg} installation failed."
-    # done
+    for pkg in ${PKGS[@]}; do
+      Rscript -e \
+          "install.packages('${pkg}', repos = '${R_REP}')" # || echo "${pkg} installation failed."
+    done
 
-    # R CMD INSTALL /opt/tpsa_1.0.0.tar.gz
-    # R CMD INSTALL /opt/tpsautils_0.0.0.99.tar.gz
+    R CMD INSTALL /opt/tpsa_1.0.0.tar.gz
+    R CMD INSTALL /opt/tpsautils_0.0.0.99.tar.gz
 
     ## installing Lavancier software
     mkdir /opt/GcoPS
@@ -218,7 +218,6 @@ Include: bash
     sed -i '161 s/^/\/\//' /opt/GcoPS/programs/colocalizationTest.cpp
     sed -i '2141 s/^/\/\//' /opt/GcoPS/programs/colocalizationTest.cpp
 
-
     cd /opt/GcoPS/bin/
     cmake ../programs/
     make
@@ -226,9 +225,9 @@ Include: bash
 
 %test
     echo "R version    : $(R --version)"
-    # echo "GEOS version : $(geos-config --version)"
-    # echo "GDAL version : $(gdalinfo --version)"
-    # echo "PROJ version : $(pkg-config --modversion proj )"
+    echo "GEOS version : $(geos-config --version)"
+    echo "GDAL version : $(gdalinfo --version)"
+    echo "PROJ version : $(pkg-config --modversion proj )"
     echo "GcoPS : $(/opt/GcoPS/bin/GcoPS -h)"
     exec echo "$@"
 
@@ -256,9 +255,9 @@ Include: bash
 %runscript
     echo "Container was created on $(date +%D)"
     echo "R version    : $(R --version)"
-    # echo "GEOS version : $(geos-config --version)"
-    # echo "GDAL version : $(gdalinfo --version)"
-    # echo "PROJ version : $(pkg-config proj --modversion)"
+    echo "GEOS version : $(geos-config --version)"
+    echo "GDAL version : $(gdalinfo --version)"
+    echo "PROJ version : $(pkg-config proj --modversion)"
     exec echo "$@"
 
 %labels
