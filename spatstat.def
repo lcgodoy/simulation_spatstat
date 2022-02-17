@@ -1,0 +1,266 @@
+Bootstrap: library
+From: ubuntu:16.04
+Include: bash
+
+%help
+    The purpose of this container is to provide a reproducible environment for
+    running the simulations for a paper submited to "spatial statistics".
+
+%files
+    pkg/tpsa_1.0.0.tar.gz /opt/
+    pkg/tpsautils_0.0.0.99.tar.gz /opt/
+    pkg/biom13115-sup-0001-gcops_codec.zip /opt/
+
+%post -c /bin/bash
+
+    ## Environment variable storing the R version to be installed
+    export R_VERSION=4.1.0
+    export GDAL_VERSION=3.2.1
+    export GEOS_VERSION=3.9.0
+    export PROJ_VERSION=7.2.1
+
+    ## upgrading installed packages
+    apt update && apt upgrade -y
+
+    apt install -y \
+    build-essential \
+    software-properties-common
+
+    ## ppa containing more updated gcc versions
+    add-apt-repository ppa:ubuntu-toolchain-r/test &&
+        apt update
+    
+    ## upgrading installed packages
+    apt update && apt upgrade -y
+
+    ## installing newer gcc and gfortran versions
+    apt install -y \
+        gcc-9 \
+        g++-9 \
+        gfortran-9
+
+    ## installing needed dependencies 
+    apt install -y wget \
+        git \
+        cmake \
+        autotools-dev \
+        autoconf \
+        libtool \
+        dirmngr \
+        libssl-dev \
+        curl \
+        libcurl4-gnutls-dev \
+        libxml2-dev \
+        libtiff5 \
+        libtiff5-dev \
+        sqlite3 \
+        postgresql \
+        libsqlite3-dev \
+        libreadline6 \
+        libreadline6-dev \
+        zlib1g-dev \
+        bzip2 \
+        libbz2-dev \
+        liblzma-dev \
+        libc6-dev \
+        pcre2-utils \
+        libpcre2-dev \
+        libblas-dev \
+        gcc-multilib \
+        gobjc++ \
+        aptitude \
+        default-jre \
+        default-jdk \
+        openjdk-8-jdk \
+        openjdk-8-jre \
+        libudunits2-dev \
+        pkg-config \
+        fftw3 \
+        fftw3-dev \
+        unzip 
+
+    # apt install -y xorg
+
+    # apt install -y cimg-dev
+
+    ## creating directories to store GEOS, PROJ, and GDAL
+    mkdir /opt/geos-${GEOS_VERSION}
+    mkdir /opt/geos-${GEOS_VERSION}/src
+    mkdir /opt/geos-${GEOS_VERSION}/build
+    mkdir /opt/proj-${PROJ_VERSION}
+    mkdir /opt/proj-${PROJ_VERSION}/src
+    mkdir /opt/proj-${PROJ_VERSION}/build
+    mkdir /opt/gdal-${GDAL_VERSION}
+    mkdir /opt/gdal-${GDAL_VERSION}/src
+    mkdir /opt/gdal-${GDAL_VERSION}/build
+
+    ## cloning the src associated with GEOS
+    wget -P /opt/geos-${GEOS_VERSION}/src \
+        http://download.osgeo.org/geos/geos-${GEOS_VERSION}.tar.bz2
+
+    cd /opt/geos-${GEOS_VERSION}/src
+    tar -xf geos-${GEOS_VERSION}.tar.bz2
+    rm geos-${GEOS_VERSION}.tar.bz2
+    
+    cd geos-${GEOS_VERSION}
+    ./configure --prefix=/opt/geos-${GEOS_VERSION}/build
+
+    make
+    make check
+    make install
+
+    export PATH=/opt/geos-${GEOS_VERSION}/build/bin:$PATH
+    export LD_LIBRARY_PATH=/opt/geos-${GEOS_VERSION}/build/lib:$LD_LIBRARY_PATH
+    export GEOS_CONFIG=/opt/geos-${GEOS_VERSION}/build/bin/geos-config
+
+    cd ../../../../
+
+    # # ## downloading PROJ 
+    wget -P /opt/proj-${PROJ_VERSION}/src \
+        https://download.osgeo.org/proj/proj-${PROJ_VERSION}.tar.gz
+
+    cd /opt/proj-${PROJ_VERSION}/src
+    tar -xzf proj-${PROJ_VERSION}.tar.gz
+    rm proj-${PROJ_VERSION}.tar.gz
+    cd proj-${PROJ_VERSION}
+
+    ./configure --prefix=/opt/proj-${PROJ_VERSION}/build
+
+    make
+    make install
+    make check
+
+    export PATH=/opt/proj-${PROJ_VERSION}/build/bin:$PATH
+    export LD_LIBRARY_PATH=/opt/proj-${PROJ_VERSION}/build/lib:$LD_LIBRARY_PATH
+    # export PROJ_LIB=/opt/proj-${PROJ_VERSION}/build/lib
+    export PROJ_LIB=/opt/proj-${PROJ_VERSION}/build/share/proj
+    export PROJ_INCLUDE=/opt/proj-${PROJ_VERSION}/build/include
+    export PKG_CONFIG_PATH=/opt/proj-${PROJ_VERSION}/build/lib/pkgconfig
+    export PROJ_DATA=/opt/proj-${PROJ_VERSION}/build/share/proj
+
+    cd ../../../../
+
+    projsync \
+        --endpoint https://cdn.proj.org \
+        --user-writable-directory \
+        --all
+
+    ## downloading GDAL 
+    wget -P /opt/gdal-${GDAL_VERSION}/src \
+        https://github.com/OSGeo/gdal/releases/download/v${GDAL_VERSION}/gdal-${GDAL_VERSION}.tar.gz
+
+    cd /opt/gdal-${GDAL_VERSION}/src
+    tar -xzf gdal-${GDAL_VERSION}.tar.gz
+    rm gdal-${GDAL_VERSION}.tar.gz
+    cd gdal-${GDAL_VERSION}
+    ./configure \
+        --prefix=/opt/gdal-${GDAL_VERSION}/build \
+        --with-proj=/opt/proj-${PROJ_VERSION}/build
+
+    make
+    make install
+
+    export PATH=/opt/gdal-${GDAL_VERSION}/build/bin:$PATH
+    export LD_LIBRARY_PATH=/opt/gdal-${GDAL_VERSION}/build/lib:$LD_LIBRARY_PATH
+    export GDAL_DATA=/opt/gdal-${GDAL_VERSION}/build/share/gdal
+    
+    # cd ../../../../
+
+    ## intalling R
+    mkdir /opt/R-${R_VERSION}
+    mkdir /opt/R-${R_VERSION}/src
+    mkdir /opt/R-${R_VERSION}/build
+
+    ## change the R-4 by a variable
+    wget -P opt/R-${R_VERSION}/src https://cran.r-project.org/src/base/R-4/R-${R_VERSION}.tar.gz
+
+    cd opt/R-${R_VERSION}/src
+    tar -xzf R-${R_VERSION}.tar.gz
+    cd R-${R_VERSION}
+
+    ./configure \
+	--prefix=/opt/R-${R_VERSION}/build \
+	--enable-memory-profiling \
+	--enable-R-shlib \
+	--with-blas \
+	--with-lapack \
+	--without-x
+
+    make
+    make install
+
+    export PATH=/opt/R-${R_VERSION}/build/bin:$PATH
+    export LD_LIBRARY_PATH=/opt/R-${R_VERSION}/build/lib:$LD_LIBRARY_PATH
+
+    ## installing packages
+    export R_REP=https://cloud.r-project.org/
+
+    # PKGS=(Rcpp RcppArmadillo magrittr stringr sp rgeos \ 
+    #       rgdal spatstat splancs purrr sf raster stars)
+
+    # for pkg in ${PKGS[@]}; do
+    #   Rscript -e \
+    #       "install.packages('${pkg}', repos = '${R_REP}')" # || echo "${pkg} installation failed."
+    # done
+
+    # R CMD INSTALL /opt/tpsa_1.0.0.tar.gz
+    # R CMD INSTALL /opt/tpsautils_0.0.0.99.tar.gz
+
+    ## installing Lavancier software
+    mkdir /opt/GcoPS
+
+    ## the software was downloaded from
+    ## https://onlinelibrary.wiley.com/doi/full/10.1111/biom.13115
+    unzip /opt/biom13115-sup-0001-gcops_codec.zip \
+      -d /opt/GcoPS/
+
+    ## modifying lines of the code that use the "display"
+    sed -i '161 s/^/\/\//' /opt/GcoPS/programs/colocalizationTest.cpp
+    sed -i '2141 s/^/\/\//' /opt/GcoPS/programs/colocalizationTest.cpp
+
+
+    cd /opt/GcoPS/bin/
+    cmake ../programs/
+    make
+    cd ../../../
+
+%test
+    echo "R version    : $(R --version)"
+    # echo "GEOS version : $(geos-config --version)"
+    # echo "GDAL version : $(gdalinfo --version)"
+    # echo "PROJ version : $(pkg-config --modversion proj )"
+    echo "GcoPS : $(/opt/GcoPS/bin/GcoPS -h)"
+    exec echo "$@"
+
+%environment
+    export LC_ALL=C
+    export R_VERSION=4.1.0
+    export GDAL_VERSION=3.2.1
+    export GEOS_VERSION=3.9.0
+    export PROJ_VERSION=7.2.1
+    export PATH=/opt/R-${R_VERSION}/build/bin:$PATH
+    export LD_LIBRARY_PATH=/opt/R-${R_VERSION}/build/lib:$LD_LIBRARY_PATH
+    export PATH=/opt/geos-${GEOS_VERSION}/build/bin:$PATH
+    export LD_LIBRARY_PATH=/opt/geos-${GEOS_VERSION}/build/lib:$LD_LIBRARY_PATH
+    export GEOS_CONFIG=/opt/geos-${GEOS_VERSION}/build/bin/geos-config
+    export PATH=/opt/gdal-${GDAL_VERSION}/build/bin:$PATH
+    export LD_LIBRARY_PATH=/opt/gdal-${GDAL_VERSION}/build/lib:$LD_LIBRARY_PATH
+    export GDAL_DATA=/opt/gdal-${GDAL_VERSION}/build/share/gdal
+    export PATH=/opt/proj-${PROJ_VERSION}/build/bin:$PATH
+    export LD_LIBRARY_PATH=/opt/proj-${PROJ_VERSION}/build/lib:$LD_LIBRARY_PATH
+    export PROJ_INCLUDE=/opt/proj-${PROJ_VERSION}/build/include
+    export PKG_CONFIG_PATH=/opt/proj-${PROJ_VERSION}/build/lib/pkgconfig
+    export PROJ_LIB=/opt/proj-${PROJ_VERSION}/build/share/proj
+    export R_REP=https://cloud.r-project.org/
+
+%runscript
+    echo "Container was created on $(date +%D)"
+    echo "R version    : $(R --version)"
+    # echo "GEOS version : $(geos-config --version)"
+    # echo "GDAL version : $(gdalinfo --version)"
+    # echo "PROJ version : $(pkg-config proj --modversion)"
+    exec echo "$@"
+
+%labels
+    Author Lucas Godoy <lucasdac.godoy@gmail.com>
+    MyLabel rspatial

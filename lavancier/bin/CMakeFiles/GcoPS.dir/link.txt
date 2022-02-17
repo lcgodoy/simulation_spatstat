@@ -1,0 +1,1 @@
+/usr/bin/c++    -fopenmp -O3 -DNDEBUG -w -O2  -rdynamic CMakeFiles/GcoPS.dir/colocalizationTest.cpp.o CMakeFiles/GcoPS.dir/vesicleDisplaying2D.cpp.o CMakeFiles/GcoPS.dir/vesicleDisplaying3D.cpp.o  -o GcoPS  -ltiff -lfftw3 -lfftw3_threads 
