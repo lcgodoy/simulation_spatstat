@@ -17,7 +17,7 @@ poly_indep <- readRDS(file_indep)
 indep_res <- compute_pvals(poly_indep, bbox_sim,
                            sinput, "indep")
 
-saveRDS(x = indep_res,
+saveRDS(object = indep_res,
         file = sprintf("data/results/indep_%s.rds",
                        formatC(sinput, width = 4,
                                flag = "0")))
@@ -37,7 +37,7 @@ poly_rep <- readRDS(file_rep)
 indep_rep <- compute_pvals(poly_rep, bbox_sim,
                            sinput, "rep")
 
-saveRDS(x = indep_rep,
+saveRDS(object = indep_rep,
         file = sprintf("data/results/rep_%s.rds",
                        formatC(sinput, width = 4,
                                flag = "0")))
@@ -57,7 +57,7 @@ poly_att <- readRDS(file_att)
 indep_att <- compute_pvals(poly_att, bbox_sim,
                            sinput, "att")
 
-saveRDS(x = indep_att,
+saveRDS(object = indep_att,
         file = sprintf("data/results/att_%s.rds",
                        formatC(sinput, width = 4,
                                flag = "0")))
