@@ -42,3 +42,6 @@ vignettes/*.pdf
 ## emacs temporary / backup files
 *.#$
 *.~$
+
+## aux file
+output.txt
