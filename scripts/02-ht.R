@@ -15,10 +15,16 @@ file_indep <- sprintf("data/raw/indep_%s.rds",
 poly_indep <- readRDS(file_indep)
 
 indep_res <- compute_pvals(poly_indep, bbox_sim,
-                           sinput, "indep")
+                           sinput, "indep",
+                           return_ts = TRUE)
 
-saveRDS(object = indep_res,
+saveRDS(object = indep_res$df,
         file = sprintf("data/results/indep_%s.rds",
+                       formatC(sinput, width = 4,
+                               flag = "0")))
+
+saveRDS(object = indep_res$ts,
+        file = sprintf("data/results/ts_lavan_%s.rds",
                        formatC(sinput, width = 4,
                                flag = "0")))
 
