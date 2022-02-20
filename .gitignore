@@ -9,6 +9,9 @@
 .rds
 .RDS
 
+*.rds
+*.RDS
+
 ## User-specific files
 .Ruserdata
 
