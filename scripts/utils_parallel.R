@@ -54,7 +54,7 @@ compute_pvals <- function(sp_lst, bb, sid, scen, verbose = TRUE) {
     mc_pv <- tpsa::gof_mc(sp_lst[[1]], sp_lst[[2]], n_sim = 499L,
                           unique_bbox = box_sim, alpha = 0.05,
                           H = 'L', ts = 'SMAD', distances = NULL,
-                          fixed = FALSE, method = 'hausdorff')$p_value
+                          fixed = TRUE, method = 'hausdorff')$p_value
 
     out <- data.frame(sim_id    = sid,
                       scenario  = scen,

@@ -1,4 +1,5 @@
 compute_lavan_pvals <- function(sp_lst, bb,
+                                return_ts = FALSE,
                                 verbose = FALSE,
                                 path_gcops = "lavancier/bin") {
     rst_sim <- lapply(sp_lst,
@@ -54,5 +55,8 @@ compute_lavan_pvals <- function(sp_lst, bb,
     lavan_pv <- 2 * pnorm(abs(lavan_ts),
                           lower.tail = FALSE)
     
-    return(lavan_pv)
+    if(return_ts)
+        return(c(lavan_ts, lavan_pv))
+    else
+        return(lavan_pv)
 }
