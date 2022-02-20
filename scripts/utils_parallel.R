@@ -1,4 +1,6 @@
-compute_pvals <- function(sp_lst, bb, sid, scen, verbose = TRUE) {
+compute_pvals <- function(sp_lst, bb, sid, scen, 
+                          return_ts = FALSE,
+                          verbose = TRUE) {
     rst_sim <- lapply(sp_lst,
                       function(x) {
                           ## ncol and nrow will control the raster resolution
@@ -62,6 +64,10 @@ compute_pvals <- function(sp_lst, bb, sid, scen, verbose = TRUE) {
                       lavancier = lavan_pv,
                       mc_test   = mc_pv)
 
+    if(return_ts) {
+        out <- list(ts = lavan_ts,
+                    df = out)
+    } 
 
     return(out)
 }
