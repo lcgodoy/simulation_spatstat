@@ -17,8 +17,7 @@ Both branches share a similar structure, having the following directories:
 * `scripts` - the `R` scripts to run the run the simulations;
 * `data` - directory to receive the results from the scripts.
 * `lavancier` - directory where Lavancier software was unzipped and
-  installed.^[Note that, if using the "sequential" you have to install this
-  software by yourself at the exact same locations where we did so.]
+  installed[^1].
 
 Also, the branches contain the `spatstat.def` file, which is used to build the
 container used in the "parallel" branch.
@@ -46,3 +45,6 @@ The file `run-sim.sh` (available only in the "parallel" branch) uses
 [SLURM](https://slurm.schedmd.com/overview.html).
 
 ---
+
+[^1]: Note that, if using the "sequential" you have to install this software by
+    yourself at the exact same locations where we did so.

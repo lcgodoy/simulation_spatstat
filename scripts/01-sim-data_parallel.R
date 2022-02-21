@@ -35,7 +35,7 @@ saveRDS(
     tpsautils::sim_data(n_1 = n, n_2 = n,
                         relation = rel,
                         r = size, points_chull = shape,
-                        max_hc = m_hc[i],
+                        max_hc = m_hc,
                         bbox = box_sim),
     file = sprintf("data/raw/rep_%s.rds",
                    formatC(sinput, width = 4,

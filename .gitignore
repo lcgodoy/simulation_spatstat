@@ -42,8 +42,9 @@ vignettes/*.pdf
 ## singularity images
 *.sif
 
-## tmp emacs files
+## emacs temporary / backup files
 *.#$
 *.~$
 
+## aux file
 output.txt

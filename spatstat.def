@@ -196,12 +196,15 @@ Include: bash
     export R_REP=https://cloud.r-project.org/
 
     PKGS=(Rcpp RcppArmadillo magrittr stringr sp rgeos \ 
-          rgdal spatstat splancs purrr sf raster stars)
+          rgdal remotes spatstat splancs purrr sf raster \
+          stars)
 
     for pkg in ${PKGS[@]}; do
       Rscript -e \
           "install.packages('${pkg}', repos = '${R_REP}')" # || echo "${pkg} installation failed."
     done
+
+    # Rscript -e "remotes::install_version('spatstat', version = '2.2.0')"
 
     R CMD INSTALL /opt/tpsa_1.0.0.tar.gz
     R CMD INSTALL /opt/tpsautils_0.0.0.99.tar.gz
