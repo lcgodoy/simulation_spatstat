@@ -1,10 +1,11 @@
 ## Simulation study for Spatial Statistics paper
 
 This repository has two options for running the simulations, a "sequential" one
-(using files ending in `_sequential` branch) and a "parallel" one (using files
-ending in `_parallel`). Although both of them are reproducible, the latter uses
-a [SingularityCE](https://sylabs.io/singularity/) container that assures the
-reproducibility and allows for running the code on _HPC_ clusters.
+(using files with filenames ending in `_sequential` branch) and a "parallel" one
+(using files with filenames ending in `_parallel`). Although both of them are
+reproducible, the latter uses a [SingularityCE](https://sylabs.io/singularity/)
+container that assures the reproducibility and allows for running the code on
+_HPC_ clusters.
 
 The structure of the repository is as follows
 
