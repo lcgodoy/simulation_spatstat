@@ -1,4 +1,4 @@
-## Simulation study for Spatial Statistics paper
+## Simulation study for Spatial Statistics paper (ID SPASTA-D-22-00014)
 
 This repository has two options for running the simulations, a "sequential" one
 (using files with filenames ending in `_sequential` branch) and a "parallel" one
@@ -43,6 +43,12 @@ run the simulations on a HPC cluster.
 
 The file `run-sim.sh` uses `spatstat.sif` to run the simulations using
 [SLURM](https://slurm.schedmd.com/overview.html).
+
+---
+
+> The `sequential` version of the code might take more than 24h to run on a
+> personal computer. We advise the use of the `parallel` version on an HPC
+> cluster.
 
 ---
 
